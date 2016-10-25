@@ -1,0 +1,175 @@
+Node.JS - Install & Create Basic Web Server Application.
+
+#######################################################
+
+Node.js is a platform built on Chrome’s JavaScript runtime for easy build, fast & scalable network applications.
+Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.  
+
+Its distinguished feature is that you can write code in asynchronous non blocking style with the benefit of being super scalable.
+
+# Whats Event-Driven ? 
+Its a programing model where the program flow is based on events such as sensor output, inputs from other messaging sources or threads etc. 
+
+# What sis Non-Blocking I/O ? 
+Non blocking operations doesn't block program executions. For instance node.js, it uses only one thread for all service requests. Every request arrives ar the server will be serviced at a time.
+
+EX: When one request is proccesed to query the database, it will process the code to query db and doesn't wait for the responce, instead it will sends a callback to the 2nd queue and the code will
+continue running. When the DB returns results, it will send a callback to the 3rd queue and when the engine is freed, it will execute the pending request in the 3r queue. 
+
+
+############# Installing Node.js on Linux Platform ##################
+
+STEP-1: As root run below command : 
+
+root@linuxserver# curl --silent --location https://rpm.nodesource.com/setup | bash -
+
+================================================================================
+================================================================================
+
+                           SCRIPT DEPRECATION WARNING
+
+  This script, located at https://rpm.nodesource.com/setup, used to
+  install Node.js v0.10, is being deprecated and will eventually be made
+  inactive.
+
+  You should use the script that corresponds to the version of Node.js you
+  wish to install. e.g.
+
+   * https://rpm.nodesource.com/setup_4.x — Node.js v4 LTS "Argon" (recommended)
+   * https://rpm.nodesource.com/setup_6.x — Node.js v6 Current
+
+  Please see https://github.com/nodejs/LTS/ for details about which version
+  may be appropriate for you.
+
+  The NodeSource Node.js Linux distributions GitHub repository contains
+  information about which versions of Node.js and which Linux distributions
+  are supported and how to use the install scripts.
+    https://github.com/nodesource/distributions
+
+================================================================================
+================================================================================
+
+Continuing in 10 seconds (press Ctrl-C to abort) ...
+
+
+## Installing the NodeSource Node.js v0.10 repo...
+
+
+## Inspecting system...
+
++ rpm -q --whatprovides redhat-release || rpm -q --whatprovides centos-release || rpm -q --whatprovides cloudlinux-release || rpm -q --whatprovides sl-release
++ uname -m
+
+## Confirming "el6-x86_64" is supported...
+
++ curl -sLf -o /dev/null 'https://rpm.nodesource.com/pub_0.10/el/6/x86_64/nodesource-release-el6-1.noarch.rpm'
+
+## Downloading release setup RPM...
+
++ mktemp
++ curl -sL -o '/tmp/tmp.aSNbu5gVY7' 'https://rpm.nodesource.com/pub_0.10/el/6/x86_64/nodesource-release-el6-1.noarch.rpm'
+
+## Installing release setup RPM...
+
++ rpm -i --nosignature --force '/tmp/tmp.aSNbu5gVY7'
+
+## Cleaning up...
+
++ rm -f '/tmp/tmp.aSNbu5gVY7'
+
+## Checking for existing installations...
+
++ rpm -qa 'node|npm' | grep -v nodesource
+XNode.js v0.10 == XNode.js v5.x
+
+================================================================================
+================================================================================
+
+                       NODE.JS v0.10 DEPRECATION WARNING
+
+  Node.js v0.10 will cease to be actively supported in October 2016.
+
+  This means you will not continue to receive security or critical stability
+  updates for this version of Node.js beyond that time.
+
+  You should begin migration to a newer version of Node.js as soon as
+  possible. Use the installation script that corresponds to the version of
+  Node.js you wish to install. e.g.
+
+   * https://rpm.nodesource.com/setup_4.x — Node.js v4 LTS "Argon" (recommended)
+   * https://rpm.nodesource.com/setup_6.x — Node.js v6 Current
+
+  Please see https://github.com/nodejs/LTS/ for details about which version
+  may be appropriate for you.
+
+  The NodeSource Node.js Linux distributions GitHub repository contains
+  information about which versions of Node.js and which Linux distributions
+  are supported and how to use the install scripts.
+    https://github.com/nodesource/distributions
+
+================================================================================
+================================================================================
+
+Continuing in 5 seconds ...
+
+
+## Run `yum install -y nodejs` (as root) to install Node.js v0.10 and npm.
+You may also need development tools to build native addons:
+  `yum install -y gcc-c++ make`
+
+STEP-2 -- Run Yum install -y nodejs as root
+STEP-3 -- Run yum install -y gcc-c++ make  as root
+
+######################################################################################
+Creating A simple Web Server Application Using Node.js
+######################################################################################
+
+Step-1: Create a file server.js 
+
+root@linuxserver# vi server.js
+var syslog = require("sys"),
+my_server = require("http");
+my_server.createServer(function(request,response){
+    syslog.puts("Server Request");
+    response.writeHeader(200, {"Content-Type": "text/plain"});
+    response.write("Test nodejs Application");
+    response.end();
+}).listen(80);
+syslog.puts("Server Running on 80");
+
+
+--- The above code runs a webserver on port 80 displaying the messages we specified in the code. 
+
+# var syslog = require("sys"), ---> This line loads the sys class into syslog variable. we used this class output log in the console 
+
+# my_server = require("http"); ---> Its loads the http library to perform the web server tasks 
+
+# my_server.createServer(function(request,response){
+    syslog.puts("Server Request");
+    response.writeHeader(200, {"Content-Type": "text/plain"});
+    response.write("Test nodejs Application");
+    response.end();
+}).listen(80); ---->  This function accepts the request on port 80 and displays the message specified in the code. Also whenever a request is made, syslog object displays a message on terminal.
+
+#########################
+
+Now lets run the Web Server Application by executing the below command 
+
+# root@linuxserver# node server.js --- We can access the server on port 80. Open a new terminal and make a request 
+
+# curl http://localhost:80 
+
+We will the messages as shown in below output 
+
+# root@linuxserver# node server.js
+Server Running on 80
+
+Server Request
+
+root@linuxserver# curl http://localhost:80   -- When you run this command u see a message on console " Server Request "
+Test nodejs Application
+
+#############################
+
+There are many frameworks available for node.js web application development. Express.js is a matured node.js framework for application development. 
+You can start with express.js if you are going to create an application using node.js.
